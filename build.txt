@@ -1,0 +1,4 @@
+displayName = Piston Mod
+author = Gaelyte
+version = 1.0
+homepage = https://github.com/Ishigh1/PistonMod

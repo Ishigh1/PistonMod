@@ -1,0 +1,8 @@
+A mod that features 4 pistons : 
+-The normal one that can only push at most 10 blocks for one tile
+-The sticky one that can also pull the block at its end
+-The long one is a bit stronger and can push for a distance of 2 tiles at once
+-The strong one is a Hardmode variant but an push blocks for a distance of 100 tiles
+
+Theses pistons are multiplayer friendly.
+The sprites aren't great though, you're welcome to propose some better ones on GitHub.
