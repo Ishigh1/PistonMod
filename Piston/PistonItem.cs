@@ -18,8 +18,8 @@ namespace PistonMod.Piston
 
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 22;
+			item.width = 16;
+			item.height = 16;
 			item.maxStack = 999;
 			item.value = 0;
 			item.rare = ItemRarityID.Green;
