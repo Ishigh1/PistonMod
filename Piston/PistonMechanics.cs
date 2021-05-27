@@ -26,8 +26,8 @@ namespace PistonMod.Piston
 			PistonVariant pistonVariant)
 		{
 			int iMin = 0;
-			int strength = pistonVariant.GetStrength();
 			int push = pistonVariant.GetPush();
+			int strength = pistonVariant.GetStrength() + push;
 			int pushed = 0;
 
 			for (int i = 1; i <= strength && pushed != push; i++)
@@ -37,6 +37,9 @@ namespace PistonMod.Piston
 				Tile tileSafely = Framing.GetTileSafely(tmpX, tmpY);
 				if (!tileSafely.active() || !Main.tileSolid[tileSafely.type])
 				{
+					if (!PistonSettings.Entity.PistonPushable &&
+					    PistonVariant.ExtractVariant(tileSafely)?.Status != PistonStatus.Retracted) break;
+
 					WorldGen.KillTile(tmpX, tmpY);
 					if (Framing.GetTileSafely(tmpX, tmpY).active())
 						break;
@@ -136,15 +139,15 @@ namespace PistonMod.Piston
 				return;
 			}
 
-			if (push.horizontalStrength == 0 || horizontalStrength / (float) push.horizontalStrength > 1)
-				push.horizontalStrength = horizontalStrength;
-			if (push.horizontalMax * horizontalDirection < horizontalMax * horizontalDirection)
-				push.horizontalMax = horizontalMax;
+			if (push.HorizontalStrength == 0 || horizontalStrength / (float) push.HorizontalStrength > 1)
+				push.HorizontalStrength = horizontalStrength;
+			if (push.HorizontalMax * horizontalDirection < horizontalMax * horizontalDirection)
+				push.HorizontalMax = horizontalMax;
 
-			if (push.verticalStrength == 0 || verticalStrength / (float) push.verticalStrength > 1)
-				push.verticalStrength = verticalStrength;
-			if (push.verticalMax * verticalDirection < verticalMax * verticalDirection)
-				push.verticalMax = verticalMax;
+			if (push.VerticalStrength == 0 || verticalStrength / (float) push.VerticalStrength > 1)
+				push.VerticalStrength = verticalStrength;
+			if (push.VerticalMax * verticalDirection < verticalMax * verticalDirection)
+				push.VerticalMax = verticalMax;
 		}
 
 		public static void RetractPiston(int x, int y)
@@ -159,15 +162,20 @@ namespace PistonMod.Piston
 			Tile pulledTile = Framing.GetTileSafely(pulledTileX, pulledTileY);
 			bool sticky = pistonVariant.Type == PistonType.Sticky && pulledTile.active() &&
 			              Main.tileSolid[pulledTile.type];
-			if (sticky && pistonVariant.Orientation != Orientation.Down)
+			if (sticky)
 			{
-				Tile aboveTile = Framing.GetTileSafely(pulledTileX, pulledTileY - 1);
-				if (aboveTile.active() &&
-				    (TileID.Sets.BasicChest[aboveTile.type] || TileLoader.IsDresser(aboveTile.type)))
+				if(!PistonSettings.Entity.PistonPushable &&
+				       PistonVariant.ExtractVariant(pulledTile)?.Status != PistonStatus.Retracted) return;
+				if (pistonVariant.Orientation != Orientation.Down)
 				{
-					WorldGen.KillTile(pulledTileX, pulledTileY - 1);
-					if (Framing.GetTileSafely(pulledTileX, pulledTileY - 1).active())
-						return;
+					Tile aboveTile = Framing.GetTileSafely(pulledTileX, pulledTileY - 1);
+					if (aboveTile.active() &&
+					    (TileID.Sets.BasicChest[aboveTile.type] || TileLoader.IsDresser(aboveTile.type)))
+					{
+						WorldGen.KillTile(pulledTileX, pulledTileY - 1);
+						if (Framing.GetTileSafely(pulledTileX, pulledTileY - 1).active())
+							return;
+					}
 				}
 			}
 
@@ -258,7 +266,8 @@ namespace PistonMod.Piston
 				newPosition.halfBrick(pulledTile.halfBrick());
 				newPosition.slope(pulledTile.slope());
 				pulledTile.active(false);
-				AddToPistonInDanger(pulledTileX, pulledTileY, -(pushAmount + 1), horizontalDirection, verticalDirection, newPosition);
+				AddToPistonInDanger(pulledTileX, pulledTileY, -(pushAmount + 1), horizontalDirection, verticalDirection,
+					newPosition);
 				WorldGen.SquareTileFrame(x + horizontalDirection, y + verticalDirection);
 				WorldGen.SquareTileFrame(pulledTileX, pulledTileY);
 			}

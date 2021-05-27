@@ -5,47 +5,47 @@ namespace PistonMod.Piston
 	public class PistonPush
 	{
 		//Coordinates of the entity when pushed at the maximum
-		public int horizontalMax;
+		public int HorizontalMax;
 
 		//Tiles pushes in the given direction
-		public int horizontalStrength;
-		public int verticalMax;
-		public int verticalStrength;
+		public int HorizontalStrength;
+		public int VerticalMax;
+		public int VerticalStrength;
 
 		public PistonPush(int horizontalStrength, int verticalStrength, int horizontalMax, int verticalMax)
 		{
-			this.horizontalStrength = horizontalStrength;
-			this.verticalStrength = verticalStrength;
-			this.horizontalMax = horizontalMax;
-			this.verticalMax = verticalMax;
+			HorizontalStrength = horizontalStrength;
+			VerticalStrength = verticalStrength;
+			HorizontalMax = horizontalMax;
+			VerticalMax = verticalMax;
 		}
 
 		public void Apply(bool isPlayer, int numEntity)
 		{
 			Entity entity = isPlayer ? new Entity(Main.player[numEntity]) : new Entity(Main.npc[numEntity]);
 
-			entity.X += horizontalStrength * 16;
-			entity.Y += verticalStrength * 16;
-			if (horizontalStrength < 0)
+			entity.X += HorizontalStrength * 16;
+			entity.Y += VerticalStrength * 16;
+			if (HorizontalStrength < 0)
 			{
-				if (entity.X + entity.Width < horizontalMax * 16)
-					entity.X = horizontalMax * 16 - entity.Width;
+				if (entity.X + entity.Width < HorizontalMax * 16)
+					entity.X = HorizontalMax * 16 - entity.Width;
 			}
-			else if (horizontalStrength > 0)
+			else if (HorizontalStrength > 0)
 			{
-				if (entity.X > (horizontalMax + 1) * 16)
-					entity.X = (horizontalMax + 1) * 16;
+				if (entity.X > (HorizontalMax + 1) * 16)
+					entity.X = (HorizontalMax + 1) * 16;
 			}
 
-			if (verticalStrength < 0)
+			if (VerticalStrength < 0)
 			{
-				if (entity.Y + entity.Height < verticalMax * 16)
-					entity.Y = verticalStrength * 16 - entity.Height;
+				if (entity.Y + entity.Height < VerticalMax * 16)
+					entity.Y = VerticalStrength * 16 - entity.Height;
 			}
-			else if (verticalStrength > 0)
+			else if (VerticalStrength > 0)
 			{
-				if (entity.Y > (verticalMax + 1) * 16)
-					entity.Y = (verticalMax + 1) * 16;
+				if (entity.Y > (VerticalMax + 1) * 16)
+					entity.Y = (VerticalMax + 1) * 16;
 			}
 		}
 	}

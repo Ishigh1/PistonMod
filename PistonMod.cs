@@ -8,17 +8,20 @@ namespace PistonMod
 {
 	public class PistonMod : Mod
 	{
+		
 		public override void Load()
 		{
 			PistonMechanics.PistonsInDanger = new List<(int, int)>();
 			PistonMechanics.EntitiesToPush = new Dictionary<(bool, int), PistonPush>();
 			PistonMechanics.PistonTileId = GetTile("PistonTile").Type;
+			PistonSettings.Entity = (PistonSettings) GetConfig("PistonSettings");
 		}
 
 		public override void Unload()
 		{
 			PistonMechanics.PistonsInDanger = null;
 			PistonMechanics.EntitiesToPush = null;
+			PistonSettings.Entity = null;
 		}
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI)

@@ -7,7 +7,8 @@ namespace PistonMod
 	{
 		public override void PostUpdate()
 		{
-			PistonMechanics.VerifyPistonIntegrity();
+			if(PistonSettings.Entity.PistonPushable)
+				PistonMechanics.VerifyPistonIntegrity();
 			PistonMechanics.EffectivelyPushEntities();
 		}
 	}
